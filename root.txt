@@ -1,0 +1,2 @@
+mongo "mongodb+srv://cluster0.uqm61.mongodb.net/" --username root
+rotiprata123
