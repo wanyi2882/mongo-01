@@ -99,3 +99,190 @@ db.listingsAndReviews.find({
     "bedrooms": 1
 }).pretty()
 ```
+
+Search in embedded key
+```
+db.listingsAndReviews.find({
+    "beds":2,
+    "bedrooms": 2,
+    "address.country": "Canada"
+},
+{
+    "name": 1,
+    "beds": 1,
+    "bedrooms": 1,
+    "address.country": 1
+}).pretty()
+```
+
+## Finding by inequality
+
+We have to use the sepcial operators `$gt` for greater than
+```
+db.listingsAndReviews.find({
+    "beds":{
+        '$gt': 3
+    }
+},{
+    "name": 1,
+    "beds": 1
+})
+```
+`$gt` = greater than
+`$lt` = lesser than
+`$gte` = greater than equal
+`$lte` = greater than equal
+`$ne` = not equal
+
+```
+Find all listings that have between 3 to 6 beds and are in Brazil:
+
+```
+db.listingsAndReviews.find({
+    'beds':{
+        '$gte':3,
+        '$lte':6
+    },
+    'address.country':'Brazil'
+},{
+    'beds':1,
+    'bedrooms':1,
+    'address.country':1
+}).pretty()
+
+## Filtering by a key that is a array
+
+Find one of the required in array `$in` which is or
+```
+db.listingsAndReviews.find({
+    "amenities": {
+        '$in': ["Oven", "Microwave", "Stove"]
+    }
+},{
+    "name": 1,
+    "amenities": 1
+}).pretty()
+```
+
+Find `$all` fit all criteria in array
+```
+db.listingsAndReviews.find({
+    "amenities": {
+        '$all': ["Oven", "Microwave", "Stove"]
+    }
+},{
+    "name": 1,
+    "amenities": 1
+}).pretty()
+```
+
+## Search by regular expression
+
+Look for substring
+
+* Find all the listings that the word `spacious` in the name
+We use the the `$regex` operator
+```
+
+db.listingsAndReviews.find({
+    'name': {
+        '$regex': "spacious",
+        '$options': "i"
+    }
+},{ 'name': 1
+})
+```
+*Find all the listings where the name includes the phrase 'apartment for x', where x is a number between 1 to 9
+
+```
+db.listingsAndReviews.find({
+    'name': {
+        '$regex': "apartment for \[1-9]",
+        '$options': "i"
+    }
+},{ 'name': 1
+})
+```
+## Select by ObjectID
+
+**The examples below uses the `sample_mflix` database**
+
+```
+use sample_mflix;
+```
+
+To find a document by its ObjectId:
+```
+db.movies.find({
+    '_id':ObjectId("573a1390f29313caabcd5b9a")
+}).pretty()
+```
+
+## Logical operators
+We want to find listings that are either in Brazil or Canada.
+
+```
+db.listingsAndReviews.find({
+    "$or":[
+        {
+            'address.country':"Brazil"
+        },
+        {
+            'address.country':"Canada"
+        }
+    ]
+}, {
+    'name':1,
+    'address.country':1
+})
+```
+Find all the listings that are from Brazil and has at least 2 bedrooms or listings that are from Canada.
+
+```
+db.listingsAndReviews.find({
+    "$or":[
+        {
+            "address.country":"Brazil",
+            "bedrooms":{
+                "$gte":3
+            }
+        },
+        {
+            "address.country":"Canada",
+        }
+    ]
+},{
+    'name':1,
+    'address.country':1,
+    'bedrooms':1
+})
+```
+
+Use `$not` to do the inverse. Example: Show all the listings that are not from Brazil.
+
+```
+db.reviewAndListings.find({
+   'address.country':{
+       '$not':{
+           '$in':['Brazil', 'Canada']
+       }
+   }
+},{
+    'name':1,
+    'address.country':1
+})
+```
+
+## Find by dates
+
+Dates in Mongo are stored using `ISODate` objects.  The parameter used to create a `ISODate` object is the date in the `YYYY-MM-DD` format.
+```
+db.listingsAndReviews.find({
+    'first_review':{
+        '$gte':ISODate('2018-01-01')
+    }
+},{
+    'name':1,
+    'first_review':1
+})
+```
