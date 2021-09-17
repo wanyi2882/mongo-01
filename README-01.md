@@ -345,3 +345,146 @@ db.animals.insert(
     "date_enrolled": ISODate("2021-02-28")
 })
 ```
+
+## update existing document
+
+1. Select the document(s)
+2. Specify the changes
+
+### Find a document by its _id and update it
+
+The `update` function has two parameters:
+* first argument: the selction criteria
+* second argument: what to update
+
+Technique 1: update a specific field (one one or more fields)
+
+```
+db.animals.update({
+    "_id": ObjectId("61443ef4540ffeac25fc8089")
+},{
+    "$set":{
+        "age": 1.5
+    }
+})
+```
+
+Technique 2: update by providing a new document
+```
+db.animals.update({
+    "_id": ObjectId("61443ef4540ffeac25fc8089")
+},{
+    "name": "Timmy",
+    "age": 1.5,
+    "breed": "German sheperd",
+    "type": "dog"
+})
+```
+
+Set "Timmy" as adopted:
+```
+db.animals.update({
+    "_id": ObjectId("61443ef4540ffeac25fc8089")
+},{
+    "$set":{
+        "status": "adopted"
+    }
+})
+```
+
+## Delete `Teacup` from the system:
+```
+db.animals.remove({
+    "_id": ObjectId("61443f79540ffeac25fc808a")
+})
+```
+## Embedded collections/documents
+```
+db.animals.insert({
+    "name": "Frenzy",
+    "age": 1,
+    "breed": "wild cat",
+    "type": "cat",
+    "checkups": [
+        {
+            "id": ObjectId(),
+            "name": "Dr Chua",
+            "diagnosis":"heart-worms",
+            "treatment": "steriods"
+        }
+    ]
+})
+```
+```
+db.animals.insert({
+    "name": "Cookie",
+    "age": 2,
+    "breed": "street dog",
+    "type": "dog"
+})
+```
+
+## Add a new object (IE a sub-document) to an array within a document
+
+```
+db.animals.update({
+    "_id": ObjectId("61444e93540ffeac25fc8091")
+
+},{
+    "$push": {
+        "checkups": [
+        {
+            "id": ObjectId(),
+            "name": "Dr Tan",
+            "diagnosis":"diabetes",
+            "treatment": "pills"
+        }
+    ]
+    }
+})
+```
+
+Add another object inside existing array
+```
+db.animals.update({
+    "_id": ObjectId("61444e41540ffeac25fc8090")
+
+},{
+    "$push": {
+        "checkups":
+        {
+            "id": ObjectId(),
+            "name": "Dr Tan",
+            "diagnosis":"fever",
+            "treatment": "panadol"
+        }
+    }
+})
+```
+
+## Remove an element from an array
+We use `$pull`
+
+```
+db.animals.update({
+    "_id":ObjectId("61444dfd5786cff39cf56457")
+}, {
+    '$pull':{
+        'checkups':{
+            'id':ObjectId("61444f7f5786cff39cf5645a")
+        }
+    }
+})
+```
+
+## update an existing sub-document in an array
+Change the vet's name from 'Dr Tan' to 'Dr Su'
+```
+db.animals.update({
+    'checkups._id': ObjectId("61445060540ffeac25fc8094")
+},{
+    '$set':{
+        'checkups.$.name': 'Dr Su',
+    }
+})
+```
