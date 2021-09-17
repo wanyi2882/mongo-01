@@ -286,3 +286,62 @@ db.listingsAndReviews.find({
     'first_review':1
 })
 ```
+
+## creating your own database
+
+1. create database
+```
+Use tgc14_animal_shelter
+```
+2. The new database is not permanent until we add a document to it.
+3. To add a document to a new collection - just assume the collection exists and try to add to it
+```
+db.animals.insert({
+    "name": "Fluffy",
+    "age": 3,
+    "breed": "Golden retriever",
+    "type": "dog"
+})
+```
+
+4. insert many at one go
+```
+db.animals.insertMany([
+    {
+    "name": "Daisy",
+    "age": 5,
+    "breed": "Greyhound",
+    "type": "dog"
+},
+{
+    "name": "Timmy",
+    "age": 1,
+    "breed": "Border Collie",
+    "type": "dog"
+}
+])
+```
+
+5. How to enter with date:
+```
+db.animals.insert(
+    {
+    "name": "Teacup",
+    "age": 9,
+    "breed": "Persian Cat",
+    "type": "cat",
+    "date_enrolled": ISODate()
+})
+```
+
+6. Give fix date
+```
+db.animals.insert(
+    {
+    "name": "Miranda",
+    "age": 2,
+    "breed": "Long-tailed Monkey",
+    "type": "monkey",
+    "date_enrolled": ISODate("2021-02-28")
+})
+```

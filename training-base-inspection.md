@@ -23,21 +23,21 @@ db.inspections.find({
 * Count how many businesses there in the city of New York
 
 ```
-db.inspections.find({
+db.inspections.count({
     "address.city": "New York"
 },{
-}).pretty()
+})
 
 ```
 * Count how many businesses there are in the city of Ridgewood and does not have violations (hint: google for "not equal" in Mongo)
 
 ```
-db.inspections.find({
+db.inspections.count({
     "address.city": "Ridgewood",
     "result": {
         "$ne": "Violation Issued"
-}
+    }
 },{
-}).pretty()
+})
 
 ```
