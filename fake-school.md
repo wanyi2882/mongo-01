@@ -28,3 +28,48 @@ db.students.insertMany([
 }
 ])
 ```
+## Hands on for update documents
+* Increase the age of all the students by 1
+```
+db.students.updateMany({
+},{
+    "$inc": {
+        "age": 1
+        }
+    }
+)
+```
+
+* Change the date enrolled of Jonathan Goh to 2018 13th May
+```
+db.students.update({
+    "_id": ObjectId("6144446f540ffeac25fc808e")
+},{
+    "$set":{
+        "date_enrolled": ISODate("2018-05-13")
+    }
+})
+```
+* Change the age of James Verses to 13
+```
+db.students.update({
+    "_id": ObjectId("6144446f540ffeac25fc808d")
+},{
+    "$set":{
+        "age": 13
+    }
+})
+
+```
+* Change the student with the name of "Jane Doe" to "Jane Doe Jr" and her age to 11.
+
+```
+db.students.update({
+    "name": "Jane Doe"
+},{
+    "$set":{
+        "name": "Jane Doe Jr",
+        "age": 11
+    }
+})
+```
